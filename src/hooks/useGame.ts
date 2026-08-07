@@ -1,21 +1,30 @@
 import { useCallback, useEffect, useState } from 'react';
-import { createInitialGameState, createRoundState, submitWordToGame } from '../game/engine';
-import type { GameState } from '../types/game';
+import { createInitialGameState, createRoundState, createReviewState, getModeSettings, submitWordToGame } from '../game/engine';
+import type { DifficultyMode, GameState } from '../types/game';
+
+const HIGH_SCORE_STORAGE_KEY = 'blackteaHighScore';
+
+const getStoredHighScore = () => {
+  if (typeof window === 'undefined') {
+    return 0;
+  }
+
+  const stored = window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY);
+  const parsed = stored ? Number(stored) : 0;
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
 
 export function useGame(dictionary: string[]) {
   const [gameState, setGameState] = useState<GameState>(() => createInitialGameState());
+  const [highScore, setHighScore] = useState<number>(() => getStoredHighScore());
 
-  const startNextRound = useCallback(() => {
+  const setMode = useCallback((mode: DifficultyMode) => {
+    setGameState(createInitialGameState(mode));
+  }, []);
+
+  const startGame = useCallback(() => {
     setGameState((previousState) => createRoundState(previousState, dictionary));
   }, [dictionary]);
-
-  useEffect(() => {
-    if (dictionary.length === 0 || gameState.status !== 'ready') {
-      return;
-    }
-
-    startNextRound();
-  }, [dictionary, gameState.status, startNextRound]);
 
   useEffect(() => {
     if (gameState.status !== 'playing') {
@@ -24,8 +33,8 @@ export function useGame(dictionary: string[]) {
 
     if (gameState.timeLeft <= 0) {
       const timer = window.setTimeout(() => {
-        startNextRound();
-      }, 700);
+        setGameState((previousState) => createReviewState(previousState, dictionary));
+      }, 200);
 
       return () => window.clearTimeout(timer);
     }
@@ -44,7 +53,7 @@ export function useGame(dictionary: string[]) {
     }, 1000);
 
     return () => window.clearInterval(interval);
-  }, [gameState.status, gameState.timeLeft, startNextRound]);
+  }, [dictionary, gameState.status, gameState.timeLeft]);
 
   const submitWord = useCallback(
     (word: string) => {
@@ -59,11 +68,24 @@ export function useGame(dictionary: string[]) {
   );
 
   const restartGame = useCallback(() => {
-    setGameState(createInitialGameState());
+    setGameState((previousState) => createInitialGameState(previousState.mode));
   }, []);
+
+  useEffect(() => {
+    setHighScore((previousHighScore) => Math.max(previousHighScore, gameState.score));
+  }, [gameState.score]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, String(highScore));
+    }
+  }, [highScore]);
 
   return {
     gameState,
+    highScore,
+    setMode,
+    startGame,
     submitWord,
     restartGame,
   };

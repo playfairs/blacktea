@@ -5,8 +5,7 @@ interface TimerProps {
 export function Timer({ timeLeft }: TimerProps) {
   return (
     <div className="timer-card" aria-label={`Time remaining ${timeLeft} seconds`}>
-      <span className="timer-label">Time</span>
-      <strong className="timer-value">{timeLeft}s</strong>
+      <strong className="timer-value">{String(timeLeft).padStart(2, '0')}</strong>
     </div>
   );
 }

@@ -42,7 +42,7 @@ export function InputBox({ onSubmit, disabled }: InputBoxProps) {
         spellCheck="false"
         disabled={disabled}
       />
-      <button type="submit" disabled={disabled}>
+      <button className="button button-primary" type="submit" disabled={disabled}>
         Submit
       </button>
     </form>

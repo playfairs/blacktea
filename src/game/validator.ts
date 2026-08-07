@@ -14,19 +14,37 @@ export function containsOrderedSubsequence(word: string, prompt: string): boolea
     return false;
   }
 
-  let promptIndex = 0;
+  return normalizedWord.includes(normalizedPrompt);
+}
 
-  for (const letter of normalizedWord) {
-    if (promptIndex < normalizedPrompt.length && letter === normalizedPrompt[promptIndex]) {
-      promptIndex += 1;
-    }
+function shuffleArray<T>(items: T[]): T[] {
+  const array = [...items];
 
-    if (promptIndex === normalizedPrompt.length) {
-      return true;
-    }
+  for (let i = array.length - 1; i > 0; i -= 1) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
   }
 
-  return false;
+  return array;
+}
+
+export function findPossibleWords(
+  prompt: string,
+  dictionary: string[],
+  usedWords: string[],
+): string[] {
+  const normalizedPrompt = normalizeWord(prompt);
+
+  const candidates = dictionary.filter((word) => {
+    const normalizedWord = normalizeWord(word);
+    return (
+      normalizedWord.length > normalizedPrompt.length &&
+      !usedWords.includes(normalizedWord) &&
+      containsOrderedSubsequence(normalizedWord, normalizedPrompt)
+    );
+  });
+
+  return shuffleArray(candidates);
 }
 
 export function validateSubmission({
@@ -54,7 +72,7 @@ export function validateSubmission({
     return {
       accepted: false,
       word: normalizedWord,
-      reason: 'That word was already used in this round.',
+      reason: 'That word was already used.',
     };
   }
 
@@ -66,7 +84,11 @@ export function validateSubmission({
     };
   }
 
-  if (!dictionary.includes(normalizedWord)) {
+  const isWordInDictionary = dictionary.some(
+    (entry) => normalizeWord(entry) === normalizedWord,
+  );
+
+  if (!isWordInDictionary) {
     return {
       accepted: false,
       word: normalizedWord,
