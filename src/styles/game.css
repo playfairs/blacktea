@@ -1,0 +1,155 @@
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.app-card,
+.game-card {
+  width: min(720px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(9, 13, 24, 0.92);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+
+.game-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.15rem;
+  color: #89d8ff;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.5rem);
+}
+
+.ghost-button {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: inherit;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.ghost-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.6fr 0.6fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prompt-card,
+.timer-card,
+.score-card,
+.results-card {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.prompt-label,
+.timer-label,
+.used-words-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8fa6c8;
+}
+
+.prompt-value {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: 0.2em;
+  font-weight: 700;
+}
+
+.timer-value {
+  font-size: 1.4rem;
+}
+
+.score-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.55rem;
+}
+
+.input-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.input-form input {
+  flex: 1;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  padding: 0.9rem 1rem;
+  border-radius: 999px;
+}
+
+.input-form button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.1rem;
+  background: linear-gradient(135deg, #7dd3fc, #818cf8);
+  color: #07111f;
+  font-weight: 700;
+}
+
+.feedback {
+  margin: 0 0 0.8rem;
+  color: #d9f7ff;
+}
+
+.used-words ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.used-words li {
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(125, 211, 252, 0.16);
+  color: #b7ecff;
+}
+
+.used-words-empty {
+  margin: 0;
+  color: #8fa6c8;
+}
+
+@media (max-width: 700px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .input-form {
+    flex-direction: column;
+  }
+}
